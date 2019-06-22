@@ -1,0 +1,10 @@
+INFO - In Add Book
+INFO - Input is Book [bId=0, bName=bio, bPrice=500, bAuthor=hgfdd, bPage=400]
+INFO - In getHospitalId
+INFO - Got Book With Id1002
+INFO - Completed getBookId
+INFO - Inserted successfully and Id is = 1002
+INFO - In Add Book
+INFO - Input is Book [bId=0, bName=woefdwbsdv, bPrice=582, bAuthor=gdjhsajw, bPage=852]
+ERROR - Error in insert = ORA-00942: table or view does not exist
+
