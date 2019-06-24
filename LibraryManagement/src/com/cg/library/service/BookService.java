@@ -3,6 +3,7 @@ package com.cg.library.service;
 import java.util.ArrayList;
 
 import com.cg.library.dto.Book;
+import com.cg.library.dto.Student;
 import com.cg.library.exception.BookException;
 
 public interface BookService {
@@ -14,4 +15,7 @@ public interface BookService {
 	boolean validateSalary(int price);
 	boolean validateName(String author);
 	boolean validateName(String name, String author);
+	boolean searchByStudentId(String studentId);
+	String  insertNewLogin(String createId);
+	
 }

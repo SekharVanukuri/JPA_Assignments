@@ -8,3 +8,20 @@ INFO - In Add Book
 INFO - Input is Book [bId=0, bName=woefdwbsdv, bPrice=582, bAuthor=gdjhsajw, bPage=852]
 ERROR - Error in insert = ORA-00942: table or view does not exist
 
+INFO - In Add Book
+INFO - Input is Book [bId=0, bName=fuyh, bPrice=3435, bAuthor=gxfqdjks, bPage=345]
+INFO - enterd studentId is123
+INFO - enterd studentId is123
+INFO - enterd studentId is121
+INFO - In Add Book
+INFO - Input is 121
+INFO - enterd studentId is121
+INFO - In Add Book
+INFO - Input is 121
+INFO - enterd studentId is121
+INFO - enterd studentId is121
+INFO - In Add Book
+INFO - Input is 111
+INFO - enterd studentId is234
+INFO - In Add Book
+INFO - Input is 47

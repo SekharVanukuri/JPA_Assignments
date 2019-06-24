@@ -3,6 +3,7 @@ package com.cg.library.dao;
 
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 import com.cg.library.dto.Book;
+import com.cg.library.dto.Student;
 import com.cg.library.exception.BookException;
 import com.cg.library.logger.MyLogger;
 import com.cg.library.util.DBUtil;
@@ -31,10 +33,84 @@ public class BookDaoImpl implements BookDao{
 		con = DBUtil.getConnect();
 		logger = MyLogger.getLogger();
 	}
+	
+	@Override
+	public String insertNewLogin(String createId) {
+		// TODO Auto-generated method stub
+		logger.info("In Add Book");
+		logger.info("Input is "+ createId);
+		
+		String query = "INSERT INTO StudentDetails VALUES(?)";
+		try
+		{
+			PreparedStatement pstmt = 
+					con.prepareStatement(query);
+			pstmt.setString(1, createId);
+			int row = pstmt.executeUpdate();
+			if(row > 0)
+			{
+				
+				logger.info("Inserted successfully and Id is = "+createId);
+			}
+			else
+				throw new BookException("unable to insert"+createId);
+		}catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Please try again");
+		}
+		return createId;
+	}
+
+	@Override
+	public boolean searchByStudentId(String studentId) {
+		logger.info("enterd studentId is"+studentId);
+		boolean studentIdNo=false;
+		String qry="SELECT * From StudentDetails where studentId=?";
+		try {
+			Statement stmt = con.createStatement();
+			PreparedStatement pstm=con.prepareStatement(qry);
+			pstm.setString(1, studentId);
+			ResultSet rs1=pstm.executeQuery();
+			boolean rs = stmt.execute(qry);
+			if(rs)
+			{
+				studentIdNo=true;
+				logger.info("Successfully enter through StudentId"+studentId);
+			}
+			else {
+				logger.info("In Add Book");
+				logger.info("Input is "+ studentId);
+				
+				String query = "INSERT INTO StudentDetails VALUES(?)";
+				try
+				{
+					PreparedStatement pstmt = 
+							con.prepareStatement(query);
+					pstmt.setString(1, studentId);
+					int row = pstmt.executeUpdate();
+					if(row > 0)
+					{
+						
+						logger.info("Inserted successfully and Id is = "+studentId);
+					}
+					else
+						throw new BookException("unable to insert"+studentId);
+				}catch (Exception e) {
+					// TODO: handle exception
+					System.out.println("Please trry again");
+				}
+				
+			}
+		}catch (SQLException e) {
+			// TODO: handle exception
+			System.out.println("Please chec k with correct  details");
+		}
+		return studentIdNo;
+	}
 
 	public int getBookId()throws BookException
 	{
-		logger.info("In getHospitalId");
+		logger.info("In getBookId");
 		int id = 0;
 		String qry = "SELECT bId_seq.CURRVAL FROM DUAL";
 			try{
@@ -56,18 +132,20 @@ public class BookDaoImpl implements BookDao{
 		
 	}
 	@Override
-	public int addBook(Book emp) throws BookException {
+	public int addBook(Book student) throws BookException {
 		// TODO Auto-generated method stub
 		logger.info("In Add Book");
-		logger.info("Input is "+emp);
+		logger.info("Input is "+student);
 		int id = 0;
-		String qry = "INSERT INTO BookJEE VALUES(bId_seq.NEXTVAL,?,?,?,?)";
+		String qry = "INSERT INTO BookJEE VALUES(bId_seq.NEXTVAL,?,?,?,?,SYSDATE,?)";
 
-		String name = emp.getbName();
-		String author = emp.getbAuthor();
-		int page = emp.getbPage();
-		int price=emp.getbPrice();
-		
+		String name = student.getbName();
+		String author = student.getbAuthor();
+		int page = student.getbPage();
+		int price=student.getbPrice();
+		String studentId=student.getStudentId();
+		//Date issueDate=student.getIssueDate();
+		//Date returnDate=student.getReturnDate();
 		
 		try
 		{
@@ -77,7 +155,9 @@ public class BookDaoImpl implements BookDao{
 			pstmt.setString(2,author);
 			pstmt.setInt(3, page);
 			pstmt.setInt(4, price);
-			
+			pstmt.setString(5, studentId);
+		//	pstmt.setDate(5, issueDate);
+			//pstmt.setDate(6, returnDate);
 			int row = pstmt.executeUpdate();
 			if(row > 0)
 			{
@@ -85,7 +165,7 @@ public class BookDaoImpl implements BookDao{
 				logger.info("Inserted successfully and Id is = "+id);
 			}
 			else
-				throw new BookException("unable to insert"+emp);
+				throw new BookException("unable to insert"+student);
 			
 		}
 		catch(SQLException e)
@@ -118,11 +198,11 @@ public class BookDaoImpl implements BookDao{
 			int row = pstmt.executeUpdate();
 			if(emp==null)
 			{
-				throw new BookException("emp with id "+bId+"not found");
+				throw new BookException("book-id "+bId+"not found");
 			}
 			else if(row > 0)
 			{
-				System.out.println("Deleted Employee with Id "+bId);
+				System.out.println("Deleted book from account  with Id "+bId);
 				
 			}
 			
@@ -153,12 +233,15 @@ public class BookDaoImpl implements BookDao{
 				String author = rs.getString(3);
 				int page = rs.getInt(4);
 				int price=rs.getInt(5);
+				Date issueDate=rs.getDate(6);
+				Date returnDate=rs.getDate(7);
+				String studentId=rs.getString(8);
 				
 			
-				emp = new Book(id,name,price,author,page);
+				emp = new Book(id,name,price,author,page,issueDate,returnDate,studentId);
 			}
 			else
-				throw new BookException("Book with id "+bId+"not found");
+				throw new BookException("Book-id "+bId+"not found");
 		}
 		catch(SQLException e)
 		{
@@ -183,9 +266,11 @@ public class BookDaoImpl implements BookDao{
 			String author = rs.getString(3);
 			int page = rs.getInt(4);
 			int price=rs.getInt(5);
-			
+			Date issueDate=rs.getDate(6);
+			Date returnDate=rs.getDate(7);
+			String studentId=rs.getString(8);
 				
-				Book emp = new Book(id,name,price,author,page);
+				Book emp = new Book(id,name,price,author,page,issueDate,returnDate,studentId);
 				list.add(emp);
 			}
 		}
@@ -197,20 +282,22 @@ public class BookDaoImpl implements BookDao{
 	}
 
 	@Override
-	public Book updateBook(int bId, int bPrice)throws BookException 
+	public Book updateBook(int bId, int  bPrice)throws BookException 
 	{
 		// TODO Auto-generated method stub
 		Book emp = getBookById(bId);
+		Date returnDate=null;
 		if(emp==null)
-			throw new BookException("Book with id "+bId+"Not found");
+			throw new BookException("Book-id "+bId+"Not found");
 		else
 		{
-			String qry = "UPDATE BookJEE SET bPrice=? WHERE bId=?";
+			String qry = "UPDATE BookJEE SET bPrice=?, returnDate=? WHERE bId=?";
 			try{
 				PreparedStatement pstmt = 
 						con.prepareStatement(qry);
 				pstmt.setInt(1, bPrice);
 				pstmt.setInt(2, bId);
+				pstmt.setDate(3, returnDate);
 				int row = pstmt.executeUpdate();
 				if(row > 0)
 				{
@@ -226,6 +313,9 @@ public class BookDaoImpl implements BookDao{
 		}
 		return emp;
 	}
+
+	
+	
 
 
 }

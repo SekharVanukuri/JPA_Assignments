@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import com.cg.library.dao.BookDao;
 import com.cg.library.dao.BookDaoImpl;
 import com.cg.library.dto.Book;
+import com.cg.library.dto.Student;
 import com.cg.library.exception.BookException;
 
 public class BookServiceImpl implements BookService {
@@ -21,7 +22,19 @@ public class BookServiceImpl implements BookService {
 		dao = new BookDaoImpl();
 	}
 	
-	
+	@Override
+	public String insertNewLogin(String createId) {
+		// TODO Auto-generated method stub
+		
+		
+		return dao.insertNewLogin(createId);
+	}
+	@Override
+	public boolean searchByStudentId(String studentId) {
+		// TODO Auto-generated method stub
+		return dao.searchByStudentId(studentId);
+	}
+
 	@Override
 	public int addBook(Book emp) throws BookException {
 		// TODO Auto-generated method stub
@@ -35,9 +48,9 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public Book getBookById(int empId) throws BookException {
+	public Book getBookById(int bId) throws BookException {
 		// TODO Auto-generated method stub
-		return dao.getBookById(empId);
+		return dao.getBookById(bId);
 	}
 
 	@Override
@@ -47,10 +60,10 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public Book updateBook(int empId, int empSal)
+	public Book updateBook(int bId, int amount)
 			throws BookException {
 		// TODO Auto-generated method stub
-		return dao.updateBook(empId, empSal);
+		return dao.updateBook(bId, amount);
 	}
 
 	
@@ -82,4 +95,6 @@ public class BookServiceImpl implements BookService {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	
 }
